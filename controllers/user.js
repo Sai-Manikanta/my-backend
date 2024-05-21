@@ -53,7 +53,7 @@ const signup = async (req, res) => {
                     <td>${req?.body?.productOfInterest}</td>
                 </tr>
             </table>
-            <a href="http://localhost:3000/verify?id=${newUser?._id}">Verify</a>
+            <a href="https://mylapay-docs.vercel.app/verify?id=${newUser?._id}">Verify</a>
         `,
         };
 
@@ -127,7 +127,7 @@ const verifyUser = async (req, res) => {
                         <td>${updatedUser?.productOfInterest}</td>
                     </tr>
                 </table>
-                <a href="http://localhost:3000/approve?id=${updatedUser?._id}">Approve</a>
+                <a href="https://mylapay-docs.vercel.app/approve?id=${updatedUser?._id}">Approve</a>
             `,
             };
 
@@ -181,7 +181,7 @@ const approveUser = async (req, res) => {
                        <p>Secret Key: ${updatedUser?.secretkey}</p>
                        <hr />
 
-                       <a href="http://localhost:3000/login">Login here</a>
+                       <a href="https://mylapay-docs.vercel.app/login">Login here</a>
                     </div>
                  `,
             };
