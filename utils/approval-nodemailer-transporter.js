@@ -6,7 +6,7 @@ const approvalTransporterNodemailer = nodemailer.createTransport({
     secure: false, 
     auth: {
         user: "approvermylapay@gmail.com",
-        pass: "paxo bvcr thvl qjyg",
+        pass: "ocuz wpju jdiq ipxg", 
     },
 });
 
