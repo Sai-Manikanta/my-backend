@@ -81,13 +81,13 @@ function generatePassword(length = 12) {
     return password;
 }
 
-function generateSecretKey(length = 20) {
+function generateSecretKey(length) {
     return crypto.randomBytes(length).toString('hex');
 }
 
 UserSchema.pre('save', function(next) {
     if (this.isNew || this.isModified('secretkey')) {
-        this.secretkey = generateSecretKey();
+        this.secretkey = generateSecretKey(20);
     }
     if (this.isNew || this.isModified('password')) {
         this.password = generatePassword();
