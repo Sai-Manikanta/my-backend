@@ -91,40 +91,12 @@ const verifyUser = async (req, res) => {
                 html: `
                 <table border="1" cellpadding="10">
                     <tr>
-                        <td><b>Company Name</b></td>
-                        <td>${updatedUser?.companyName}</td>
+                        <td><b>Organization Id</b></td>
+                        <td>${updatedUser?.organizationId}</td>
                     </tr>
                     <tr>
-                        <td><b>First Name</b></td>
-                        <td>${updatedUser?.firstName}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Last Name</b></td>
-                        <td>${updatedUser?.lastName}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Country</b></td>
-                        <td>${updatedUser?.country}</td>
-                    </tr>
-                    <tr>
-                        <td><b>City</b></td>
-                        <td>${updatedUser?.city}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Pincode</b></td>
-                        <td>${updatedUser?.pincode}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Email</b></td>
-                        <td>${updatedUser?.email}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Mobile Number</b></td>
-                        <td>${updatedUser?.mobileNumber}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Product of Interest</b></td>
-                        <td>${updatedUser?.productOfInterest}</td>
+                        <td><b>User Name</b></td>
+                        <td>${updatedUser?.userName}</td>
                     </tr>
                 </table>
                 <a href="https://mylapay-docs.vercel.app/approve?id=${updatedUser?._id}">Approve</a>
@@ -251,7 +223,10 @@ const loginUser = async (req, res) => {
             pincode: user?.pincode,
             email: user?.email,
             mobileNumber: user?.mobileNumber,
-            productOfInterest: user?.productOfInterest
+            productOfInterest: user?.productOfInterest,
+            secretkey: user?.secretkey,
+            organizationId: user?.organizationId,
+            vcMerchantId: user?.vcMerchantId
         };
 
         res.json({ message: 'Successfully logged in user', token, user: userData });
@@ -274,10 +249,40 @@ const verifySandboxAccess = async (req, res) => {
     }
 }
 
+const getMyDetails = async (req, res) => {
+    const user = req?.user;
+    if(req?.user){
+        res.status(200).json({
+            message: 'fecthed Users Successfully', 
+            user: {
+                _id: user._id,
+                companyName: user.companyName,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                country:user.country,
+                city: user.city,
+                pincode: user.pincode,
+                email: user.email,
+                mobileNumber: user.mobileNumber,
+                productOfInterest: user.productOfInterest,
+                secretkey: user.secretkey,
+                organizationId: user.organizationId,
+                vcMerchantId: user.vcMerchantId,
+                userName: user.userName,
+              }
+        })
+    } else {
+        res.status(403).json({
+            name: 'Organization Id verification failed'
+        })
+    }
+}
+
 module.exports = {
     signup,
     verifyUser,
     approveUser,
     loginUser,
+    getMyDetails,
     verifySandboxAccess
 }
