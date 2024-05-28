@@ -211,6 +211,8 @@ const loginUser = async (req, res) => {
         // }
 
         // {"_id":{"$oid":"664b5a4ae9c2fe7509eefcce"},"companyName":"HappyCure","firstName":"Sai Manikanta","lastName":"Bandaru","country":"India","city":"Hyderabad","pincode":"501505","email":"saimanikanta@happycure.in","mobileNumber":"9505629940","productOfInterest":"Authentication","verified":true,"approved":true,"createdAt":{"$date":{"$numberLong":"1716214346837"}},"updatedAt":{"$date":{"$numberLong":"1716214461841"}},"secretkey":"11585f8324b862e1857536b6c549db620f82a1c9","password":"(.7~,ac4DeVI","organizationId":"697a1f879d6ffc705d2e","userName":"happycure4417","__v":{"$numberInt":"0"}}
+        // comment for deployment
+
 
         const token = jwt.sign({ _id: user._id }, "mylapay(.7~,ac4DeVI"); //, { expiresIn: '1h' }
 
