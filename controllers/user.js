@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const transporterNodemailer = require('../utils/nodemailer-transporter');
 const verifierTransporterNodemailer = require('../utils/verifier-nodemailer-transporter');
@@ -137,6 +138,10 @@ const approveUser = async (req, res) => {
         }
 
         if (updatedUser?.approved) {
+            const token = jwt.sign({ userId: updatedUser._id }, "mylapay(.7~,ac4DeVI"); // { expiresIn: '1h' }
+
+            const url = `https://mylapay-docs.vercel.app/reset-password/${token}`;
+
             const mailOptions = {
                 from: "approvermylapay@gmail.com",
                 to: updatedUser?.email,
@@ -144,16 +149,11 @@ const approveUser = async (req, res) => {
                 html: `
                     <div>
                        <h1>Congratulations, Your Mylapay account approved</h1>
-                       <p>Use following credentials to login</p>
-
                        <hr />
                        <p>Organization Id: ${updatedUser?.organizationId}</p>
                        <p>UserName: ${updatedUser?.userName}</p>
-                       <p>Password: ${updatedUser?.password}</p>
-                       <p>Secret Key: ${updatedUser?.secretkey}</p>
                        <hr />
-
-                       <a href="https://mylapay-docs.vercel.app/login">Login here</a>
+                       <a href="${url}">Reset Password</a>
                     </div>
                  `,
             };
@@ -200,15 +200,10 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ error: 'The secret key you entered is incorrect.' });
         }
 
-        // const isMatch = await user.comparePassword(password);
-        if (user.password !== password) {
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
             return res.status(400).json({ error: 'The password you entered is incorrect.' });
         }
-
-        // const isMatch = await user.comparePassword(password);
-        // if (!isMatch) {
-        //     return res.status(400).json({ error: 'Invalid password' });
-        // }
 
         // {"_id":{"$oid":"664b5a4ae9c2fe7509eefcce"},"companyName":"HappyCure","firstName":"Sai Manikanta","lastName":"Bandaru","country":"India","city":"Hyderabad","pincode":"501505","email":"saimanikanta@happycure.in","mobileNumber":"9505629940","productOfInterest":"Authentication","verified":true,"approved":true,"createdAt":{"$date":{"$numberLong":"1716214346837"}},"updatedAt":{"$date":{"$numberLong":"1716214461841"}},"secretkey":"11585f8324b862e1857536b6c549db620f82a1c9","password":"(.7~,ac4DeVI","organizationId":"697a1f879d6ffc705d2e","userName":"happycure4417","__v":{"$numberInt":"0"}}
         // comment for deployment
@@ -240,7 +235,7 @@ const loginUser = async (req, res) => {
 const verifySandboxAccess = async (req, res) => {
     console.log("from controller", req.user);
 
-    if(req?.user?.organizationId === req?.body?.organizationId){
+    if (req?.user?.organizationId === req?.body?.organizationId) {
         res.status(200).json({
             name: 'Verify Sandbox Accesss'
         })
@@ -253,15 +248,15 @@ const verifySandboxAccess = async (req, res) => {
 
 const getMyDetails = async (req, res) => {
     const user = req?.user;
-    if(req?.user){
+    if (req?.user) {
         res.status(200).json({
-            message: 'fecthed Users Successfully', 
+            message: 'fecthed Users Successfully',
             user: {
                 _id: user._id,
                 companyName: user.companyName,
                 firstName: user.firstName,
                 lastName: user.lastName,
-                country:user.country,
+                country: user.country,
                 city: user.city,
                 pincode: user.pincode,
                 email: user.email,
@@ -271,7 +266,7 @@ const getMyDetails = async (req, res) => {
                 organizationId: user.organizationId,
                 vcMerchantId: user.vcMerchantId,
                 userName: user.userName,
-              }
+            }
         })
     } else {
         res.status(403).json({
@@ -280,11 +275,42 @@ const getMyDetails = async (req, res) => {
     }
 }
 
+const resetPassword = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    let payload;
+    try {
+        payload = jwt.verify(token, "mylapay(.7~,ac4DeVI");
+    } catch (e) {
+        return res.status(400).send('Invalid or expired token.');
+    }
+
+    const user = await User.findById(payload.userId);
+
+    if (!user) {
+        return res.status(400).send('User does not exist.');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    const updatedUser = await user.save();
+
+    console.log({
+        payload, hashedPassword, user, updatedUser
+    })
+
+    res.status(200).json({
+        message: 'Password has been reset.'
+    });
+}
+
 module.exports = {
     signup,
     verifyUser,
     approveUser,
     loginUser,
     getMyDetails,
-    verifySandboxAccess
+    verifySandboxAccess,
+    resetPassword
 }

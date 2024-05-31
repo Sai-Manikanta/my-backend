@@ -121,7 +121,8 @@ UserSchema.pre('save', async function (next) {
     if (this.isNew || this.isModified('secretkey')) {
         this.secretkey = generateSecretKey(20);
     }
-    if (this.isNew || this.isModified('password')) {
+    if (this.isNew) {
+        //  || this.isModified('password')
         this.password = generatePassword();
     }
     if (this.isNew || this.isModified('organizationId')) {
