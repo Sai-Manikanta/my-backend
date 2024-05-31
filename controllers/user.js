@@ -150,8 +150,11 @@ const approveUser = async (req, res) => {
                     <div>
                        <h1>Congratulations, Your Mylapay account approved</h1>
                        <hr />
+                       <p>Use the following credentials to log in after resetting your password through the reset password link.</p>
+                       <br />
                        <p>Organization Id: ${updatedUser?.organizationId}</p>
                        <p>UserName: ${updatedUser?.userName}</p>
+                       <p>Secret key: ${updatedUser?.secretkey}</p>
                        <hr />
                        <a href="${url}">Reset Password</a>
                     </div>
