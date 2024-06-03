@@ -7,6 +7,19 @@ const approvalTransporterNodemailer = require('../utils/approval-nodemailer-tran
 
 const signup = async (req, res) => {
     try {
+        const existingUser = await User.findOne({
+            $or: [
+                { email: req.body.email },
+                { mobileNumber: req.body.mobileNumber }
+            ]
+        });
+
+        if (existingUser) {
+            return res.status(400).json({
+                error: 'User already exists with the provided email or mobile number. Please try logging in instead.',
+            });
+        }
+        
         const newUser = new User(req.body);
 
         await newUser.save();
