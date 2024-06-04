@@ -19,7 +19,7 @@ const signup = async (req, res) => {
                 error: 'User already exists with the provided email or mobile number. Please try logging in instead.',
             });
         }
-        
+
         const newUser = new User(req.body);
 
         await newUser.save();
@@ -66,6 +66,22 @@ const signup = async (req, res) => {
                     <td><b>Product of Interest</b></td>
                     <td>${req?.body?.productOfInterest}</td>
                 </tr>
+                <tr>
+                    <td><b>Secret key</b></td>
+                    <td>${req?.body?.secretkey}</td>
+                </tr>
+                <tr>
+                    <td><b>Organization Id</b></td>
+                    <td>${req?.body?.organizationId}</td>
+                </tr>
+                <tr>
+                    <td><b>User Name</b></td>
+                    <td>${req?.body?.userName}</td>
+                </tr>
+                <tr>
+                    <td><b>VC Merchant ID</b></td>
+                    <td>${req?.body?.vcMerchantId}</td>
+                </tr>
             </table>
             <a href="https://mylapay-docs.vercel.app/verify?id=${newUser?._id}">Verify</a>
         `,
@@ -104,15 +120,59 @@ const verifyUser = async (req, res) => {
                 subject: "Account Approval",
                 html: `
                 <table border="1" cellpadding="10">
-                    <tr>
-                        <td><b>Organization Id</b></td>
-                        <td>${updatedUser?.organizationId}</td>
-                    </tr>
-                    <tr>
-                        <td><b>User Name</b></td>
-                        <td>${updatedUser?.userName}</td>
-                    </tr>
-                </table>
+                <tr>
+                    <td><b>Company Name</b></td>
+                    <td>${updatedUser?.companyName}</td>
+                </tr>
+                <tr>
+                    <td><b>First Name</b></td>
+                    <td>${updatedUser?.firstName}</td>
+                </tr>
+                <tr>
+                    <td><b>Last Name</b></td>
+                    <td>${updatedUser?.lastName}</td>
+                </tr>
+                <tr>
+                    <td><b>Country</b></td>
+                    <td>${updatedUser?.country}</td>
+                </tr>
+                <tr>
+                    <td><b>City</b></td>
+                    <td>${updatedUser?.city}</td>
+                </tr>
+                <tr>
+                    <td><b>Pincode</b></td>
+                    <td>${updatedUser?.pincode}</td>
+                </tr>
+                <tr>
+                    <td><b>Email</b></td>
+                    <td>${updatedUser?.email}</td>
+                </tr>
+                <tr>
+                    <td><b>Mobile Number</b></td>
+                    <td>${updatedUser?.mobileNumber}</td>
+                </tr>
+                <tr>
+                    <td><b>Product of Interest</b></td>
+                    <td>${updatedUser?.productOfInterest}</td>
+                </tr>
+                <tr>
+                    <td><b>Secret key</b></td>
+                    <td>${updatedUser?.secretkey}</td>
+                </tr>
+                <tr>
+                    <td><b>Organization Id</b></td>
+                    <td>${updatedUser?.organizationId}</td>
+                </tr>
+                <tr>
+                    <td><b>User Name</b></td>
+                    <td>${updatedUser?.userName}</td>
+                </tr>
+                <tr>
+                    <td><b>VC Merchant ID</b></td>
+                    <td>${updatedUser?.vcMerchantId}</td>
+                </tr>
+            </table>
                 <a href="https://mylapay-docs.vercel.app/approve?id=${updatedUser?._id}">Approve</a>
             `,
             };
@@ -153,7 +213,7 @@ const approveUser = async (req, res) => {
         if (updatedUser?.approved) {
             const token = jwt.sign({ userId: updatedUser._id }, "mylapay(.7~,ac4DeVI"); // { expiresIn: '1h' }
 
-            const url = `https://mylapay-docs.vercel.app/reset-password/${token}`;
+            const url = `https://mylapay-docs.vercel.app/generate-password/${token}`;
 
             const mailOptions = {
                 from: "approvermylapay@gmail.com",
@@ -161,15 +221,14 @@ const approveUser = async (req, res) => {
                 subject: "Your Mylapay Account Approved",
                 html: `
                     <div>
-                       <h1>Congratulations, Your Mylapay account approved</h1>
+                       <h1>Congratulations, your Mylapay Account is approved!</h1>
                        <hr />
-                       <p>Use the following credentials to log in after resetting your password through the reset password link.</p>
-                       <br />
+                       <p>Please find your user details below.</p>
                        <p>Organization Id: ${updatedUser?.organizationId}</p>
                        <p>UserName: ${updatedUser?.userName}</p>
                        <p>Secret key: ${updatedUser?.secretkey}</p>
                        <hr />
-                       <a href="${url}">Reset Password</a>
+                       <p>To generate a new password, please click the link <a href="${url}"><b>Generate Password</b></a></p>
                     </div>
                  `,
             };

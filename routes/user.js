@@ -10,6 +10,6 @@ router.patch('/user/approve/:id', approveUser)
 router.post('/user/get-my-data', verifyTokenMiddleware, getMyDetails)
 router.post('/login', loginUser)
 router.post('/verify-sandbox-access', verifyTokenMiddleware, verifySandboxAccess)
-router.post('/user/reset-password/:token', resetPassword)
+router.post('/user/generate-password/:token', resetPassword)
 
 module.exports = router;
