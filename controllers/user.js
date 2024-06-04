@@ -68,19 +68,19 @@ const signup = async (req, res) => {
                 </tr>
                 <tr>
                     <td><b>Secret key</b></td>
-                    <td>${req?.body?.secretkey}</td>
+                    <td>${newUser?.secretkey}</td>
                 </tr>
                 <tr>
                     <td><b>Organization Id</b></td>
-                    <td>${req?.body?.organizationId}</td>
+                    <td>${newUser?.organizationId}</td>
                 </tr>
                 <tr>
                     <td><b>User Name</b></td>
-                    <td>${req?.body?.userName}</td>
+                    <td>${newUser?.userName}</td>
                 </tr>
                 <tr>
                     <td><b>VC Merchant ID</b></td>
-                    <td>${req?.body?.vcMerchantId}</td>
+                    <td>${newUser?.vcMerchantId}</td>
                 </tr>
             </table>
             <a href="https://mylapay-docs.vercel.app/verify?id=${newUser?._id}">Verify</a>
