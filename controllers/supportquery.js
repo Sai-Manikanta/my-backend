@@ -25,7 +25,7 @@ const createSupportQuery = async (req, res) => {
 
         const mailOptions = {
             from: "saimani.bandaru123@gmail.com",
-            to: "saimanikanta@happycure.in, verifiermylapay@gmail.com",
+            to: "techsupport@mylapay.com, saimanikanta@happycure.in",
             subject: "Support Query",
             html: `
             <div>
