@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 // ROUTERS
 const userRoutes = require('./routes/user');
+const supportQueryRoutes = require('./routes/supportQuery');
 
 const app = express();
 
@@ -24,6 +25,7 @@ mongoose.connect(uri)
 
 // API routes
 app.use('/api/v1/auth', userRoutes);
+app.use('/api/v1/query-support', supportQueryRoutes);
 
 const PORT = process.env.PORT || 9000;
 
