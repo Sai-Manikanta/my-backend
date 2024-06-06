@@ -28,14 +28,14 @@ const createSupportQuery = async (req, res) => {
             to: "techsupport@mylapay.com, saimanikanta@happycure.in",
             subject: "Support Query",
             html: `
-            <div>
-                <h1>Support Query</h1>
-                <hr />
-                <p>Organization Id: ${newSupportQuery.organizationId}</p>
-                <p>User Name: ${newSupportQuery.userName}</p>
-                <p>Description: ${newSupportQuery.description}</p>
-            </div>
-        `,
+                <div>
+                    <h1>Support Query</h1>
+                    <hr />
+                    <p>Organization Id: ${newSupportQuery.organizationId}</p>
+                    <p>User Name: ${newSupportQuery.userName}</p>
+                    <p>Description: ${newSupportQuery.description}</p>
+                </div>
+            `,
         };
 
         try {

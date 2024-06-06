@@ -298,7 +298,8 @@ const loginUser = async (req, res) => {
             productOfInterest: user?.productOfInterest,
             secretkey: user?.secretkey,
             organizationId: user?.organizationId,
-            vcMerchantId: user?.vcMerchantId
+            vcMerchantId: user?.vcMerchantId,
+            userName: user?.userName
         };
 
         res.json({ message: 'Successfully logged in user', token, user: userData });
