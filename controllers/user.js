@@ -319,7 +319,7 @@ const getMyDetails = async (req, res) => {
     const user = req?.user;
     if (req?.user) {
         res.status(200).json({
-            message: 'fecthed Users Successfully',
+            message: 'fetched Users Successfully',
             user: {
                 _id: user._id,
                 companyName: user.companyName,
@@ -344,6 +344,32 @@ const getMyDetails = async (req, res) => {
     }
 }
 
+const generatePassword = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    let payload;
+    try {
+        payload = jwt.verify(token, "mylapay(.7~,ac4DeVI");
+    } catch (e) {
+        return res.status(400).send('Invalid or expired token.');
+    }
+
+    const user = await User.findById(payload.userId);
+
+    if (!user) {
+        return res.status(400).send('User does not exist.');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+        message: 'Password has been reset.'
+    });
+}
+
 const resetPassword = async (req, res) => {
     const { token } = req.params;
     const { password } = req.body;
@@ -365,13 +391,50 @@ const resetPassword = async (req, res) => {
     user.password = hashedPassword;
     const updatedUser = await user.save();
 
-    console.log({
-        payload, hashedPassword, user, updatedUser
-    })
-
     res.status(200).json({
         message: 'Password has been reset.'
     });
+}
+
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Generate a reset token
+        const token = jwt.sign({ userId: user._id }, "mylapay(.7~,ac4DeVI", { expiresIn: '1h' });
+
+        // Construct the reset URL
+        const resetUrl = `https://mylapay-docs.vercel.app/reset-password/${token}`;
+
+        // Mail options
+        const mailOptions = {
+            from: 'saimani.bandaru123@gmail.com',
+            to: user.email,
+            subject: 'Password Reset Request',
+            html: `
+                <div>
+                    <h1>Password Reset</h1>
+                    <p>We received a request to reset your password. Click the link below to reset your password:</p>
+                    <a href="${resetUrl}">Reset Password</a>
+                    <p><strong>Note:</strong> This link is valid for 1 hour only.</p>
+                </div>
+            `
+        };
+
+        // Send the email
+        await transporterNodemailer.sendMail(mailOptions);
+
+        res.status(200).json({ message: 'Password reset link sent' });
+    } catch (error) {
+        console.error('Error sending password reset email:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
 }
 
 module.exports = {
@@ -381,5 +444,7 @@ module.exports = {
     loginUser,
     getMyDetails,
     verifySandboxAccess,
-    resetPassword
+    resetPassword,
+    generatePassword,
+    forgotPassword
 }
