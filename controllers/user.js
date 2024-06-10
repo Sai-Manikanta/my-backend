@@ -91,8 +91,7 @@ const signup = async (req, res) => {
             let info = await transporterNodemailer.sendMail(mailOptions);
 
             res.status(200).json({
-                message: 'Registered user successfully, Send registered account for verification',
-                // info: info.response
+                message: 'Registered user successfully, Send registered account for verification'
             });
         } catch (error) {
             res.status(500).json({
@@ -183,8 +182,7 @@ const verifyUser = async (req, res) => {
                 return res.status(200).json({
                     message: 'Verified user successfully, Send for approval',
                     userName: updatedUser?.userName,
-                    status: 'success',
-                    // info: info.response
+                    status: 'success'
                 });
             } catch (error) {
                 return res.status(500).json({
@@ -239,8 +237,7 @@ const approveUser = async (req, res) => {
                 return res.status(200).json({
                     message: 'Approved user successfully',
                     userName: updatedUser?.userName,
-                    status: 'success',
-                    // info: info.response
+                    status: 'success'
                 });
             } catch (error) {
                 return res.status(500).json({
@@ -279,10 +276,6 @@ const loginUser = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ error: 'The password you entered is incorrect.' });
         }
-
-        // {"_id":{"$oid":"664b5a4ae9c2fe7509eefcce"},"companyName":"HappyCure","firstName":"Sai Manikanta","lastName":"Bandaru","country":"India","city":"Hyderabad","pincode":"501505","email":"saimanikanta@happycure.in","mobileNumber":"9505629940","productOfInterest":"Authentication","verified":true,"approved":true,"createdAt":{"$date":{"$numberLong":"1716214346837"}},"updatedAt":{"$date":{"$numberLong":"1716214461841"}},"secretkey":"11585f8324b862e1857536b6c549db620f82a1c9","password":"(.7~,ac4DeVI","organizationId":"697a1f879d6ffc705d2e","userName":"happycure4417","__v":{"$numberInt":"0"}}
-        // comment for deployment
-
 
         const token = jwt.sign({ _id: user._id }, "mylapay(.7~,ac4DeVI"); //, { expiresIn: '1h' }
 

@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-// const { verifyTokenMiddleware } = require('../middleware/verifyToken.js')
 
 const { createSupportQuery } = require('../controllers/supportquery.js');
 

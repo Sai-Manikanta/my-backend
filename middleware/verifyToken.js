@@ -11,19 +11,13 @@ const verifyTokenMiddleware = async (req, res, next) => {
     try {
         const decoded = jwt.verify(token, "mylapay(.7~,ac4DeVI");
 
-        // Fetch user details
         const userDetails = await User.findById(decoded._id);
 
-        
         if (!userDetails) {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        // console.log(userDetails);
-
-        // Attach user details to request headers
         req.user = userDetails;
-        // req.headers['user-details'] = JSON.stringify(userDetails);
 
         next();
     } catch (err) {

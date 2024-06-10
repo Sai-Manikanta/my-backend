@@ -84,34 +84,21 @@ function generatePassword(length = 12) {
     return password;
 }
 
-// function generateSecretKey(length) {
-//     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-//     let secretKey = '';
-//     for (let i = 0; i < length; i++) {
-//         const randomIndex = crypto.randomInt(characters.length);
-//         secretKey += characters[randomIndex];
-//     }
-//     return secretKey;
-// }
-
 function generateSecretKey(length) {
     const alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     const digits = '0123456789';
     const allCharacters = alphabets + digits;
     const allCharactersLength = allCharacters.length;
 
-    // Ensure at least one alphabet and one digit
     let secretKey = '';
     secretKey += alphabets.charAt(crypto.randomInt(alphabets.length));
     secretKey += digits.charAt(crypto.randomInt(digits.length));
 
-    // Generate remaining characters randomly
     for (let i = 2; i < length; i++) {
         const randomIndex = crypto.randomInt(allCharactersLength);
         secretKey += allCharacters[randomIndex];
     }
 
-    // Shuffle the characters to ensure the alphabet and digit are not just at the beginning
     secretKey = secretKey.split('').sort(() => 0.5 - Math.random()).join('');
     
     return secretKey;
@@ -122,7 +109,6 @@ UserSchema.pre('save', async function (next) {
         this.secretkey = generateSecretKey(20);
     }
     if (this.isNew) {
-        //  || this.isModified('password')
         this.password = generatePassword();
     }
     if (this.isNew || this.isModified('organizationId')) {

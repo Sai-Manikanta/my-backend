@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+const dotenv = require('dotenv')
 const mongoose = require('mongoose');
+
+dotenv.config();
 
 // ROUTERS
 const userRoutes = require('./routes/user');
@@ -11,11 +14,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connection URI
-const uri = 'mongodb+srv://us-electricals:T1lbGQP7WSs9M9Gg@uselectricals.pr972cz.mongodb.net/mylapay';
-
 // Connect to MongoDB
-mongoose.connect(uri)
+mongoose.connect(process.env.MONGODB_URL)
     .then(() => {
         console.log('Connected to MongoDB');
     })

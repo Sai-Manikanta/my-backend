@@ -21,8 +21,6 @@ const createSupportQuery = async (req, res) => {
 
         await newSupportQuery.save();
 
-        // techsupport@mylapay.com, 
-
         const mailOptions = {
             from: "saimani.bandaru123@gmail.com",
             to: "techsupport@mylapay.com, saimanikanta@happycure.in",
