@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const supportQuerySchema = new mongoose.Schema({
-    organizationId: {
+    uniqueId: {
         type: String,
     },
     userName: {

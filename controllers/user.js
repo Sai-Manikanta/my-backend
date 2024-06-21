@@ -72,7 +72,7 @@ const signup = async (req, res) => {
                 </tr>
                 <tr>
                     <td><b>Organization Id</b></td>
-                    <td>${newUser?.organizationId}</td>
+                    <td>${newUser?.uniqueId}</td>
                 </tr>
                 <tr>
                     <td><b>User Name</b></td>
@@ -161,7 +161,7 @@ const verifyUser = async (req, res) => {
                 </tr>
                 <tr>
                     <td><b>Organization Id</b></td>
-                    <td>${updatedUser?.organizationId}</td>
+                    <td>${updatedUser?.uniqueId}</td>
                 </tr>
                 <tr>
                     <td><b>User Name</b></td>
@@ -200,6 +200,12 @@ const verifyUser = async (req, res) => {
     }
 };
 
+{/* <p>Please find your user details below.</p>
+                       <p>Organization Id: ${updatedUser?.uniqueId}</p>
+                       <p>UserName: ${updatedUser?.userName}</p>
+                       <p>Secret key: ${updatedUser?.secretkey}</p>
+                       <hr /> */}
+
 const approveUser = async (req, res) => {
     try {
         const updatedUser = await User.findByIdAndUpdate(req?.params?.id, { approved: true }, { new: true });
@@ -220,11 +226,6 @@ const approveUser = async (req, res) => {
                 html: `
                     <div>
                        <h1>Congratulations, your Mylapay Account is approved!</h1>
-                       <hr />
-                       <p>Please find your user details below.</p>
-                       <p>Organization Id: ${updatedUser?.organizationId}</p>
-                       <p>UserName: ${updatedUser?.userName}</p>
-                       <p>Secret key: ${updatedUser?.secretkey}</p>
                        <hr />
                        <p>To generate a new password, please click the link <a href="${url}"><b>Generate Password</b></a></p>
                     </div>
@@ -256,21 +257,23 @@ const approveUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-    const { organizationId, userName, password, secretKey } = req.body;
+    const { uniqueId, userName, password, secretKey } = req.body;
+
+    const Code2FA = req?.body?.['2FACode'];
 
     try {
-        const user = await User.findOne({ userName });
+        const user = await User.findOne({ email: userName });
         if (!user) {
             return res.status(400).json({ error: 'The username you entered does not belong to any account.' });
         }
 
-        if (user.organizationId !== organizationId) {
-            return res.status(400).json({ error: 'The organization ID you entered is incorrect.' });
-        }
+        // if (user.uniqueId !== uniqueId) {
+        //     return res.status(400).json({ error: 'The organization ID you entered is incorrect.' });
+        // }
 
-        if (user.secretkey !== secretKey) {
-            return res.status(400).json({ error: 'The secret key you entered is incorrect.' });
-        }
+        // if (user.secretkey !== secretKey) {
+        //     return res.status(400).json({ error: 'The secret key you entered is incorrect.' });
+        // }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
@@ -290,7 +293,7 @@ const loginUser = async (req, res) => {
             mobileNumber: user?.mobileNumber,
             productOfInterest: user?.productOfInterest,
             secretkey: user?.secretkey,
-            organizationId: user?.organizationId,
+            uniqueId: user?.uniqueId,
             vcMerchantId: user?.vcMerchantId,
             userName: user?.userName
         };
@@ -304,7 +307,7 @@ const loginUser = async (req, res) => {
 const verifySandboxAccess = async (req, res) => {
     console.log("from controller", req.user);
 
-    if (req?.user?.organizationId === req?.body?.organizationId) {
+    if (req?.user?.uniqueId === req?.body?.uniqueId) {
         res.status(200).json({
             name: 'Verify Sandbox Accesss'
         })
@@ -332,7 +335,7 @@ const getMyDetails = async (req, res) => {
                 mobileNumber: user.mobileNumber,
                 productOfInterest: user.productOfInterest,
                 secretkey: user.secretkey,
-                organizationId: user.organizationId,
+                uniqueId: user.uniqueId,
                 vcMerchantId: user.vcMerchantId,
                 userName: user.userName,
             }

@@ -6,7 +6,7 @@ const createSupportQuery = async (req, res) => {
     try {
         const existingUser = await User.findOne({
             $and: [
-                { organizationId: req.body.organizationId },
+                { uniqueId: req.body.uniqueId },
                 { userName: req.body.userName }
             ]
         });
@@ -29,7 +29,7 @@ const createSupportQuery = async (req, res) => {
                 <div>
                     <h1>Support Query</h1>
                     <hr />
-                    <p>Organization Id: ${newSupportQuery.organizationId}</p>
+                    <p>Organization Id: ${newSupportQuery.uniqueId}</p>
                     <p>User Name: ${newSupportQuery.userName}</p>
                     <p>Description: ${newSupportQuery.description}</p>
                 </div>

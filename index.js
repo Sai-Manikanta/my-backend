@@ -8,6 +8,7 @@ dotenv.config();
 // ROUTERS
 const userRoutes = require('./routes/user');
 const supportQueryRoutes = require('./routes/supportQuery');
+const sandboxPageDataRoutes = require('./routes/sandboxPageData');
 
 const app = express();
 
@@ -26,6 +27,8 @@ mongoose.connect(process.env.MONGODB_URL)
 // API routes
 app.use('/api/v1/auth', userRoutes);
 app.use('/api/v1/query-support', supportQueryRoutes);
+app.use('/api/v1/sandbox-page-data', sandboxPageDataRoutes);
+
 
 const PORT = process.env.PORT || 9000;
 
