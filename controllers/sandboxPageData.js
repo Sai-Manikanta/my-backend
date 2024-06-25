@@ -44,8 +44,34 @@ const getSandboxPageData = async (req, res) => {
     }
 }
 
+const updateSandboxData = async (req, res) => {
+    const { name } = req.params;
+    const { responseParameters } = req.body;
+  
+    if (!responseParameters) {
+      return res.status(400).send({ message: 'responseParameters is required' });
+    }
+  
+    try {
+      const updatedDocument = await SandboxPageData.findOneAndUpdate(
+        { name },
+        { $set: { 'response.responseParameters': responseParameters } },
+        { new: true }
+      );
+  
+      if (!updatedDocument) {
+        return res.status(404).send({ message: 'Document not found' });
+      }
+  
+      res.status(200).send(updatedDocument);
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  }
+
 
 module.exports = {
     createSandboxPageData,
-    getSandboxPageData
+    getSandboxPageData,
+    updateSandboxData
 }
