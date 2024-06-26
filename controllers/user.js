@@ -283,6 +283,7 @@ const loginUser = async (req, res) => {
         const token = jwt.sign({ _id: user._id }, "mylapay(.7~,ac4DeVI"); //, { expiresIn: '1h' }
 
         const userData = {
+            _id: user?._id,
             companyName: user?.companyName,
             firstName: user?.firstName,
             lastName: user?.lastName,
