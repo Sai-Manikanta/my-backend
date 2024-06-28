@@ -18,10 +18,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    // city: {
-    //     type: String,
-    //     required: true
-    // },
     pincode: {
         type: String,
         required: true
@@ -37,10 +33,10 @@ const UserSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    // productOfInterest: {
-    //     type: [String],
-    //     required: true
-    // },
+    typeOfEntity: {
+        type: String,
+        required: true
+    },
     verified: {
         type: Boolean,
         default: false
@@ -65,6 +61,9 @@ const UserSchema = new mongoose.Schema({
     vcMerchantId: {
         type: String
     },
+    dateOfIncorporation: {
+        type: Date
+    }
 }, {
     timestamps: true
 });
@@ -128,7 +127,7 @@ UserSchema.pre('save', async function (next) {
             if (lengthOfLegalName >= 7) {
                 const truncatedName = legalName?.slice(0, 7);
                 const randomNums = generateSecretKey(8);
-                uniqueString = `${truncatedName}_${randomNums}`; 
+                uniqueString = `${truncatedName}_${randomNums}`;
             } else {
                 const randomNums = generateSecretKey(15 - lengthOfLegalName);
                 uniqueString = `${legalName}_${randomNums}`;

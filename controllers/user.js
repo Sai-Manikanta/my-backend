@@ -200,12 +200,6 @@ const verifyUser = async (req, res) => {
     }
 };
 
-{/* <p>Please find your user details below.</p>
-                       <p>Organization Id: ${updatedUser?.uniqueId}</p>
-                       <p>UserName: ${updatedUser?.userName}</p>
-                       <p>Secret key: ${updatedUser?.secretkey}</p>
-                       <hr /> */}
-
 const approveUser = async (req, res) => {
     try {
         const updatedUser = await User.findByIdAndUpdate(req?.params?.id, { approved: true }, { new: true });
@@ -319,7 +313,7 @@ const verifySandboxAccess = async (req, res) => {
     }
 }
 
-const getMyDetails = async (req, res) => {
+const getMyDetailsOLD = async (req, res) => {
     const user = req?.user;
     if (req?.user) {
         res.status(200).json({
@@ -338,6 +332,37 @@ const getMyDetails = async (req, res) => {
                 secretkey: user.secretkey,
                 uniqueId: user.uniqueId,
                 vcMerchantId: user.vcMerchantId,
+                userName: user.userName,
+            }
+        })
+    } else {
+        res.status(403).json({
+            name: 'Organization Id verification failed'
+        })
+    }
+}
+
+const getMyDetails = async (req, res) => {
+    const user = req?.user;
+    if (req?.user) {
+        res.status(200).json({
+            message: 'fetched Users Successfully',
+            user: {
+                _id: user._id,
+                entityName: user.entityName,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                country: user.country,
+                city: user.city,
+                pincode: user.pincode,
+                email: user.email,
+                mobileNumber: user.mobileNumber,
+                productOfInterest: user.productOfInterest,
+                typeOfEntity: user.typeOfEntity,
+                dateOfIncorporation: user.dateOfIncorporation,
+                // secretkey: user.secretkey,
+                // uniqueId: user.uniqueId,
+                // vcMerchantId: user.vcMerchantId,
                 userName: user.userName,
             }
         })
@@ -441,6 +466,23 @@ const forgotPassword = async (req, res) => {
     }
 }
 
+const updateProfileData = async (req, res) => {
+    try {
+        const id = req?.user?._id;
+        const updateData = req.body;
+        
+        const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 module.exports = {
     signup,
     verifyUser,
@@ -450,5 +492,6 @@ module.exports = {
     verifySandboxAccess,
     resetPassword,
     generatePassword,
-    forgotPassword
+    forgotPassword,
+    updateProfileData
 }

@@ -79,6 +79,25 @@ const getProductManagementData = async (req, res) => {
 //     }
 // };
 
+// const updateProductManagementData = async (req, res) => {
+//     const userId = req.params.userId;
+//     const updates = req.body.products;
+
+//     try {
+//         const options = {
+//             new: true, // Return the updated document
+//             upsert: true, // Create a new document if not found
+//             setDefaultsOnInsert: true // Apply default values if creating a new document
+//         };
+
+//         const product = await ProductManagement.findOneAndUpdate({ userId }, updates, options);
+
+//         res.json(product);
+//     } catch (err) {
+//         res.status(500).send(err);
+//     }
+// };
+
 const updateProductManagementData = async (req, res) => {
     const userId = req.params.userId;
     const updates = req.body.products;
@@ -90,7 +109,11 @@ const updateProductManagementData = async (req, res) => {
             setDefaultsOnInsert: true // Apply default values if creating a new document
         };
 
-        const product = await ProductManagement.findOneAndUpdate({ userId }, updates, options);
+        const product = await ProductManagement.findOneAndUpdate(
+            { userId },
+            { $set: { products: updates } }, // Ensure correct update syntax
+            options
+        );
 
         res.json(product);
     } catch (err) {
