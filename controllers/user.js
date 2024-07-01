@@ -31,8 +31,8 @@ const signup = async (req, res) => {
             html: `
             <table border="1" cellpadding="10">
                 <tr>
-                    <td><b>Company Name</b></td>
-                    <td>${req?.body?.companyName}</td>
+                    <td><b>Entity Name</b></td>
+                    <td>${req?.body?.entityName}</td>
                 </tr>
                 <tr>
                     <td><b>First Name</b></td>
@@ -47,10 +47,6 @@ const signup = async (req, res) => {
                     <td>${req?.body?.country}</td>
                 </tr>
                 <tr>
-                    <td><b>City</b></td>
-                    <td>${req?.body?.city}</td>
-                </tr>
-                <tr>
                     <td><b>Pincode</b></td>
                     <td>${req?.body?.pincode}</td>
                 </tr>
@@ -61,10 +57,6 @@ const signup = async (req, res) => {
                 <tr>
                     <td><b>Mobile Number</b></td>
                     <td>${req?.body?.mobileNumber}</td>
-                </tr>
-                <tr>
-                    <td><b>Product of Interest</b></td>
-                    <td>${req?.body?.productOfInterest}</td>
                 </tr>
                 <tr>
                     <td><b>Secret key</b></td>
@@ -120,8 +112,8 @@ const verifyUser = async (req, res) => {
                 html: `
                 <table border="1" cellpadding="10">
                 <tr>
-                    <td><b>Company Name</b></td>
-                    <td>${updatedUser?.companyName}</td>
+                    <td><b>Entity Name</b></td>
+                    <td>${updatedUser?.entityName}</td>
                 </tr>
                 <tr>
                     <td><b>First Name</b></td>
@@ -136,10 +128,6 @@ const verifyUser = async (req, res) => {
                     <td>${updatedUser?.country}</td>
                 </tr>
                 <tr>
-                    <td><b>City</b></td>
-                    <td>${updatedUser?.city}</td>
-                </tr>
-                <tr>
                     <td><b>Pincode</b></td>
                     <td>${updatedUser?.pincode}</td>
                 </tr>
@@ -150,10 +138,6 @@ const verifyUser = async (req, res) => {
                 <tr>
                     <td><b>Mobile Number</b></td>
                     <td>${updatedUser?.mobileNumber}</td>
-                </tr>
-                <tr>
-                    <td><b>Product of Interest</b></td>
-                    <td>${updatedUser?.productOfInterest}</td>
                 </tr>
                 <tr>
                     <td><b>Secret key</b></td>
