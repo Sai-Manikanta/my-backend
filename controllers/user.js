@@ -156,7 +156,7 @@ const verifyUser = async (req, res) => {
                     <td>${updatedUser?.vcMerchantId}</td>
                 </tr>
             </table>
-                <a href="https://mylapay-docs.vercel.app/approve?id=${updatedUser?._id}">Approve</a>
+                <a href="https://mylapay-docs.vercel.app/approve-profile-changes/${updatedUser?._id}">Approve</a>
             `,
             };
 
@@ -450,20 +450,124 @@ const forgotPassword = async (req, res) => {
     }
 }
 
-const updateProfileData = async (req, res) => {
-    try {
-        const id = req?.user?._id;
-        const updateData = req.body;
-        
-        const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+// const updateProfileData = async (req, res) => {
+//     try {
+//         const id = req?.user?._id;
+//         const updateData = req.body;
 
-        if (!updatedUser) {
-            return res.status(404).json({ message: 'User not found' });
+//         const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+
+//         if (!updatedUser) {
+//             return res.status(404).json({ message: 'User not found' });
+//         }
+
+//         res.status(200).json(updatedUser);
+//     } catch (error) {
+//         res.status(400).json({ message: error.message });
+//     }
+// }
+
+const updateProfileData = async (req, res) => {
+    const { userId, changes } = req.body;
+
+    console.log(req.body);
+    console.log(req.user)
+
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) return res.status(404).send('User not found');
+
+        user.pendingChanges = changes;
+        await user.save();
+
+        // Send verification email
+        // sendVerificationEmail(user);
+
+        const mailOptions = {
+            from: "saimani.bandaru123@gmail.com",
+            to: "verifiermylapay@gmail.com",
+            subject: "Update Profile Verification",
+            html: `<p>Please verify the changes for user ${user.firstName} ${user.lastName} by clicking the following link: <a href="https://mylapay-docs.vercel.app/verify-changes/${user._id}">Verify</a></p>`,
+        };
+
+        try {
+            let info = await transporterNodemailer.sendMail(mailOptions);
+
+            res.status(200).json({
+                message: 'Update Profile information saved and triggered mail to verifier successfully'
+            });
+        } catch (error) {
+            res.status(500).json({
+                error: error.toString()
+            });
         }
 
-        res.status(200).json(updatedUser);
+        // res.status(200).send('Profile update requested. A verification email has been sent.');
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).send(error.message);
+    }
+}
+
+const getProfileChanges = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        if (!user) return res.status(404).send('User not found');
+
+        res.status(200).send({ pendingChanges: user.pendingChanges, userPreviousData: user });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+const approveChanges = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        if (!user) return res.status(404).send('User not found');
+
+        console.log(user);
+
+        const pendingChangesObject = Object.fromEntries(user.pendingChanges);
+
+        const firstName = pendingChangesObject.firstName;
+        const lastName = pendingChangesObject.lastName;
+        const mobileNumber = pendingChangesObject.mobileNumber;
+
+        if(firstName){
+            user.firstName = firstName;
+        }
+
+        if(lastName){
+            user.lastName = lastName;
+        }
+
+        if(mobileNumber){
+            user.mobileNumber = mobileNumber;
+        }
+        
+        user.pendingChanges = {}
+
+        await user.save();
+
+        const mailOptions = {
+            from: "saimani.bandaru123@gmail.com",
+            to: user.email,
+            subject: "Profile Update",
+            html: `<p>Your profile update has been approved and updated. Thank you</p>`,
+        };
+
+        try {
+            let info = await transporterNodemailer.sendMail(mailOptions);
+
+            res.status(200).json({
+                message: 'Changes approved and profile updated'
+            });
+        } catch (error) {
+            res.status(500).json({
+                error: error.toString()
+            });
+        }
+    } catch (error) {
+        res.status(500).send(error.message);
     }
 }
 
@@ -477,5 +581,7 @@ module.exports = {
     resetPassword,
     generatePassword,
     forgotPassword,
-    updateProfileData
+    updateProfileData,
+    getProfileChanges,
+    approveChanges
 }

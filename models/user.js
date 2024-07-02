@@ -63,6 +63,10 @@ const UserSchema = new mongoose.Schema({
     },
     dateOfIncorporation: {
         type: Date
+    },
+    pendingChanges: {
+        type: Map,
+        default: {}
     }
 }, {
     timestamps: true

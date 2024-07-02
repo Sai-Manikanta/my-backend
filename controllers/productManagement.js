@@ -8,6 +8,7 @@ const ProductManagement = require('../models/productManagement');
 // });
 
 const getProductManagementData = async (req, res) => {
+    console.log('RAN')
     try {
         const userId = req.params.userId;
         let productManagementData = await ProductManagement.findOne({ userId });
