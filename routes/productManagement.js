@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const { verifyTokenMiddleware } = require('../middleware/verifyToken.js')
 
 const { getProductManagementData, updateProductManagementData } = require('../controllers/productManagement.js');
 
-router.get('/:userId', getProductManagementData);
-router.patch('/:userId', updateProductManagementData);
+router.get('/', verifyTokenMiddleware, getProductManagementData);
+router.patch('/', verifyTokenMiddleware, updateProductManagementData);
+
 
 module.exports = router;

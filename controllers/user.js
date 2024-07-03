@@ -156,7 +156,7 @@ const verifyUser = async (req, res) => {
                     <td>${updatedUser?.vcMerchantId}</td>
                 </tr>
             </table>
-                <a href="https://mylapay-docs.vercel.app/approve-profile-changes/${updatedUser?._id}">Approve</a>
+                <a href="https://mylapay-docs.vercel.app/approve?id=${updatedUser?._id}">Approve</a>
             `,
             };
 
@@ -487,7 +487,7 @@ const updateProfileData = async (req, res) => {
             from: "saimani.bandaru123@gmail.com",
             to: "verifiermylapay@gmail.com",
             subject: "Update Profile Verification",
-            html: `<p>Please verify the changes for user ${user.firstName} ${user.lastName} by clicking the following link: <a href="https://mylapay-docs.vercel.app/verify-changes/${user._id}">Verify</a></p>`,
+            html: `<p>Please verify the changes for user ${user.firstName} ${user.lastName} by clicking the following link: <a href="https://mylapay-docs.vercel.app/approve-profile-changes/${user._id}">Verify</a></p>`,
         };
 
         try {

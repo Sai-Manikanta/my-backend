@@ -8,13 +8,12 @@ const ProductManagement = require('../models/productManagement');
 // });
 
 const getProductManagementData = async (req, res) => {
-    console.log('RAN')
     try {
-        const userId = req.params.userId;
-        let productManagementData = await ProductManagement.findOne({ userId });
+        // const userId = req.params.userId;
+        let productManagementData = await ProductManagement.findOne({ userId: req.user._id });
 
         if (!productManagementData) {
-            productManagementData = new ProductManagement({ userId });
+            productManagementData = new ProductManagement({ userId: req.user._id });
             await productManagementData.save();
         }
 
@@ -100,7 +99,7 @@ const getProductManagementData = async (req, res) => {
 // };
 
 const updateProductManagementData = async (req, res) => {
-    const userId = req.params.userId;
+    // const userId = req.params.userId;
     const updates = req.body.products;
 
     try {
@@ -111,7 +110,7 @@ const updateProductManagementData = async (req, res) => {
         };
 
         const product = await ProductManagement.findOneAndUpdate(
-            { userId },
+            { userId: req.user._id },
             { $set: { products: updates } }, // Ensure correct update syntax
             options
         );
