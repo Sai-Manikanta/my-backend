@@ -4,13 +4,9 @@ const ProductManagementSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'User' // Assuming you have a User model
+        ref: 'User' 
     },
     products: {
-        merchantPlugins: {
-            type: Boolean,
-            default: false
-        },
         ['3DSSecure']: {
             type: Boolean,
             default: false
