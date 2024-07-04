@@ -11,6 +11,10 @@ const ProductManagementSchema = new mongoose.Schema({
             type: Boolean,
             default: false
         },
+        ['3DSSecure']: {
+            type: Boolean,
+            default: false
+        },
         authorization: {
             type: Boolean,
             default: false
